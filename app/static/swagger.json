@@ -1,0 +1,644 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+      "title": "Swagger MoviesAPI - OpenAPI 3.0",
+      "description": "Test",
+      "termsOfService": "http://swagger.io/terms/",
+      "contact": {
+        "email": "ayush.mandal11@gmail.com"
+      },
+      "license": {
+        "name": "Apache 2.0",
+        "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+      },
+      "version": "1.0.11"
+    },
+    "externalDocs": {
+      "description": "Find out more about Swagger",
+      "url": "http://swagger.io"
+    },
+    "servers": [
+      {
+        "url": "http://127.0.0.1:5000"
+      }
+    ],
+    "tags": [
+      {
+        "name": "User",
+        "description": "Create User, Login and Logut user"
+      },
+      {
+        "name": "Movie",
+        "description": "Create Movies and Perform CURD operations"
+      },
+      {
+        "name": "Search Movies",
+        "description": "Search Movies using title, genre, release year, description and cast"
+      },
+      {
+        "name": "User Rating",
+        "description": "Rate Movies as an User"
+      }
+    ],
+    "paths": {
+      "/auth/register": {
+        "post": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Create a new user",
+          "operationId": "register",
+          "requestBody": {
+            "description": "Create a new user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "User Created Successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                
+                }
+              }
+            },
+          
+            "400": {
+              "description": "Username and email already exists",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                
+                }
+              }
+            }
+          }
+          
+        }
+      },
+      "/auth/login": {
+        "post": {
+          "tags": [
+            "User"
+          ],
+          "summary": "login with user credentials",
+          "description": "use username and password to login",
+          "operationId": "login",
+          "requestBody": {
+            "description": "Create a new user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/login"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/login"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid credentials"
+            }
+          }
+        }
+      },
+      "/auth/logout": {
+        "get": {
+          "tags": [
+            "User"
+          ],
+          "summary": "logout from session",
+          "description": "logout user from the session",
+          "operationId": "logout",
+          "responses": {
+            "200": {
+              "description": "logout successfull"
+            },
+            "401":{
+              "description": "Already Logged out"
+            }
+          }
+        }
+      },"/api/movies": {
+        "post": {
+          "tags": [
+            "Movie"
+          ],
+          "summary": "Upload Movie Details",
+          "description": "Upload Movie Details",
+          "operationId": "Create Movie",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Movies"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Movies"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Credentials"
+          }
+          
+        }
+      },
+      "/api/movies?genre={genre}&release_year={release_year}&cast={cast}&dirctor={director}&sort_by={sort_by}&sort_order={sort_order}": {
+        "get": {
+          "tags": [
+            "Movie"
+          ],
+          "summary": "List all Movies",
+          "description": "Find all Movies also Filter and sort movies. Results are paginated",
+          "operationId": "movies",
+          "parameters": [
+            {
+              "name": "genre",
+              "in": "path",
+              "description": "genre of Movie to return",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },{
+              "name": "release_year",
+              "in": "path",
+              "description": "release_year of Movie to return",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },{
+              "name": "cast",
+              "in": "path",
+              "description": "cast of Movie to return",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },{
+              "name": "director",
+              "in": "path",
+              "description": "director of Movie to return",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },{
+              "name": "sort_by",
+              "in": "path",
+              "description": "sort result by release year or ticket price",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "default": "release_year"
+              }
+            },{
+              "name": "sort_order",
+              "in": "path",
+              "description": "sort result by asc or desc",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "default": "asc"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MoviesList"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid ID supplied"
+            }
+            
+          }
+        }
+
+      },
+      
+      "/api/movies/{movie_id}": {
+        "get": {
+          "tags": [
+            "Movie"
+          ],
+          "summary": "Returns Movie Details by ID",
+          "description": "Returns Movie Details by ID",
+          "operationId": "Get Movie by ID",
+          "parameters": [
+            {
+              "name": "movie_id",
+              "in": "path",
+              "description": "Movie ID to return",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "default":1
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Movies"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "Movie"
+          ],
+          "summary": "update Movie",
+          "description": "Only Creator and Admin can update the movie details",
+          "operationId": "Update Movie",
+          "parameters": [
+            {
+              "name": "movie_id",
+              "in": "path",
+              "description": "Movie ID to return",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "default":1
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Movies"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Movies"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "You dont Have authorization"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Movie"
+          ],
+          "summary": "Delete Movie",
+          "description": "Only creator and admin can delete movies",
+          "operationId": "deleteOrder",
+          "parameters": [
+            {
+              "name": "movie_id",
+              "in": "path",
+              "description": "ID of the movie that needs to be deleted",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Movie deleted successfully"
+            },
+            "403": {
+              "description": "You are not authorized"
+            }
+          }
+        }
+      },
+      "/api/search/movies?q={filter}": {
+        "get": {
+          "tags": [
+            "Search Movies"
+          ],
+          "summary": "Search Movies",
+          "description": "search functionality on movie name, actor name, description, and category",
+          "operationId": "Search Movies",
+          "parameters": [
+            {
+              "name": "filter",
+              "in": "path",
+              "description": "Keyword for searching movies",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "default": "action"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MoviesSearch"
+                  }
+                }
+                
+              }
+            },
+            "400": {
+              "description": "Search Term Required"
+          }
+        }
+      }
+      },
+      "/api//movies/user_rating/{movie_id}": {
+        "post": {
+          "tags": [
+            "User Rating"
+          ],
+          "summary": "Rate a movie as an user",
+          "description": "Rate a movie as an user from 1 to 10",
+          "operationId": "user rating",
+          "parameters": [
+            {
+              "name": "movie_id",
+              "in": "path",
+              "description": "ID of the move to be rated by user",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRating"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful operation"       
+                }
+              }
+            }
+        },
+      
+      "/api//movies/movie_ratings/{movie_id}": {
+        "get": {
+          "tags": [
+            "User Rating"
+          ],
+          "summary": "List the user ratings of a movie",
+          "description": "List the user ratings of a movie",
+          "operationId": "movie ratings",
+          "parameters": [
+            {
+              "name": "movie_id",
+              "in": "path",
+              "description": "ID of the movie to display the ratings",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+            
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MovieRatings"
+                  }
+                }
+              }
+              }
+            },
+          
+            "400": {
+              "description": "Invalid username/password supplied"
+            }
+          }
+      
+      }
+        },
+
+
+    "components": {
+        "schemas": {
+        "User": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string",
+              "example": "theUser"
+            },
+            "email": {
+              "type": "string",
+              "example": "john@email.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "12345"
+            },
+            "is_admin": {
+              "type": "boolean",
+              "example": 0
+            }
+          },
+          "xml": {
+            "name": "user"
+          }
+        },
+        "login": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string",
+              "example": "theUser"
+            },
+            "password": {
+              "type": "string",
+              "example": "12345"
+            }
+          }
+        },
+        "MoviesList": {
+          "type": "object",
+          "properties": {
+            "current page": {
+              "type": "integer",
+              "format": "int64",
+              "example": 10
+            },
+            "has next": {
+              "type": "boolean",
+              "example": "true"
+            },
+            "has prev": {
+              "type": "boolean",
+              "example": "true"
+            },
+            
+            "movies": {
+              "type": "array",
+              "items": {
+                "id": "integer",
+                "title": "string"
+              }
+            },
+            "per page": {
+              "type": "integer",
+              "example": 10
+             
+            },
+            "total movies": {
+              "type": "integer",
+              "example": 10
+            }
+          }
+        },
+        "Movies": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "example":"LA LA Land"
+            },
+            "release_date": {
+              "type": "datetime",
+              "example":"2022-11-7"
+            },
+            "cast": {
+              "type": "string",
+              "example":"rayen Gosling"
+
+            },
+            "director": {
+              "type": "string",
+              "example":"Sam Raimi"
+            },
+            "description": {
+              "type": "string",
+              "example":"some description"
+            },
+            "genre": {
+              "type": "string",
+              "example":"romance"
+            },
+            "average_rating": {
+              "type": "float",
+              "example":"8.4"
+            },"ticket_price": {
+              "type": "float",
+              "example":"200"
+            }
+          }
+        },
+        "MoviesSearch": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "format": "int32",
+              "example": 1
+            },
+            "title": {
+              "type": "string",
+              "example": "LA LA Land"
+            }
+          } 
+        },
+        "UserRating": {
+          "type": "object",
+          "properties": {
+            "rating": {
+              "type": "integer",
+              "format": "int32",
+              "example": 1
+            }
+          } 
+        },
+        "MovieRatings": {
+          "type": "object",
+          "properties": {
+            "movie_id": {
+              "type": "integer",
+              "format": "int32",
+              "example": 1
+            },
+            "ratings":{
+              "type": "array",
+              "items": {
+                "id": "integer",
+                "title": "string"
+              }
+            }
+          } 
+        }
+      }
+    }
+  }
+      
+     
+    
+  
